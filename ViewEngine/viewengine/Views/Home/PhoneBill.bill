@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <title>Title</title>
+
+   <style>
+		html, body {
+			margin: 0;
+			border: 0;
+			padding: 0;
+			font-family: sans-serif;
+			background: grey;
+			width: 100vw;
+		}
+
+		body {
+			display: flex;
+			justify-content: center;
+			padding-top: 25px;
+			padding-bottom: 25px;
+			overflow-x: hidden;
+		}
+
+		#doc {
+			background: white;
+			width: 21cm;
+			height: 29.7cm;
+			position: relative;
+		}
+
+		.section {
+			position: absolute;
+		}
+
+   </style>
+
+   </head>
+   <body>
+
+     <div id="doc">
+
+		[comment OBJECTNAME|x,y|w,h]
+		[section GENERATOR|0,0|100%,32px]
+		[section CUSTOMER|13cm,2cm|7cm,4cm]
+		[section ACCOUNT|1cm,2cm,|7cm,4cm]
+		[section SUBSCRIPTION|1cm,23.5cm|19cm,4cm]
+		[section BUNDLES|1cm,6.5cm|19cm,4cm]
+		[section ITEMS|1cm,11cm|19cm,12cm]
+		[dummy NOTVALID|a,b|c,d]
+
+	 </div>
+
+   </body>
+   </html>

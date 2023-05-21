@@ -1,0 +1,19 @@
+
+
+1) Once the request reaches the action and action executed, AspNet calls the GetView method in your custom
+   IViewEngine class.
+2) If GetView successfully loads a template requested by action, it responds with success response.
+3) This response in turn creates a new instance of View Engine's IView ready to render the found template.
+4) If it does not find the requested template, the request is handed to FindView method of IViewEngine in order
+   to search different places to locate the template.
+5) GetView is called for every action in every view engine.
+6) If FindView also fails to locate the template and error out, this signals to ASP.NET that the template
+   for the request is not found.
+7) The View Engine at this point returns the list of searched locations which in turn returns the view not
+   found page.
+8) If FindView reports as successful, then we proceed as for GetView being successful, and instantiate an 
+   IView custom class.
+9) IView class has a method - Render whose job is to take the available data and the template and merge them into 
+   the final page response to return to the server.
+10) Data is collected and packaged in a controller action, then handed to IViewEngine,IView pair in its packaged form
+    usually in object form or ViewData structures.
