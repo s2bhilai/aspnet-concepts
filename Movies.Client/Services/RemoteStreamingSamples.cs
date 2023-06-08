@@ -41,7 +41,6 @@ public class RemoteStreamingSamples : IIntegrationService
         var movies = JsonSerializer.DeserializeAsyncEnumerable<Movie>(responseStream,
             _jsonSerializerOptionsWrapper.Options);
 
-
         await foreach (var movie in movies)
         {
             Console.WriteLine(movie.Title);
