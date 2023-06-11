@@ -41,7 +41,7 @@ using IHost host = Host.CreateDefaultBuilder(args)
         // services.AddScoped<IIntegrationService, CompressionSamples>();
 
         // For the CRUD samples
-        services.AddScoped<IIntegrationService, CompressionSamples>();
+        services.AddScoped<IIntegrationService, CancellationSamples>();
 
         // For the compression samples
         // services.AddScoped<IIntegrationService, CompressionSamples>();
