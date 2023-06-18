@@ -50,7 +50,18 @@ public partial class ListingModel : PageModel
         if (response.IsSuccessStatusCode)
         {
             var jsonContent = await response.Content.ReadAsStringAsync();
-            Products = JsonConvert.DeserializeObject<List<ProductModel>>(jsonContent); // Newtonsoft.Json
+            //Products = JsonConvert.DeserializeObject<List<ProductModel>>(jsonContent); // Newtonsoft.Json
+
+            //Products = await response.Content.ReadFromJsonAsync<List<ProductModel>>();
+
+            //Replaced Newtonsoft with System.Text.Json
+            //Products = JsonSerializer.Deserialize<List<ProductModel>>(jsonContent,
+            //new JsonSerializerOptions(JsonSerializerDefaults.Web));
+
+            //If we are using Serialization/Deserialization a lot, JSON source generators 
+            //source generators can be used at compile time the some runtime overhead can be saved
+            Products = JsonSerializer.Deserialize(jsonContent, 
+                SourceGenerationContext.Default.ListProductModel);
 
             if (Products != null && Products.Any())
             {

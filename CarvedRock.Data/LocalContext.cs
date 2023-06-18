@@ -20,6 +20,7 @@ namespace CarvedRock.Data
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options
                 .UseSqlite($"Data Source={DbPath}")
+                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
                 .LogTo(Console.WriteLine, LogLevel.Information);
 
         public void MigrateAndCreateData()
