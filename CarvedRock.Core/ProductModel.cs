@@ -13,3 +13,11 @@ public class ProductModel
     public decimal Rating { get; set; }
     public int NumberOfRatings { get; set; }
 }
+
+
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
+[JsonSerializable(typeof(List<ProductModel>))]
+public partial class SourceGenerationContext: JsonSerializerContext
+{
+
+}
