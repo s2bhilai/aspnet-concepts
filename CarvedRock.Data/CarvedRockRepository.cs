@@ -2,6 +2,7 @@
 using CarvedRock.Data.Entities;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
 namespace CarvedRock.Data
@@ -9,14 +10,16 @@ namespace CarvedRock.Data
     public class CarvedRockRepository :ICarvedRockRepository
     {
         private readonly LocalContext _ctx;
-        private readonly ILogger<CarvedRockRepository> _logger;        
+        private readonly ILogger<CarvedRockRepository> _logger;
+        private readonly IMemoryCache _memoryCache;
         private readonly ILogger _factoryLogger;
 
         public CarvedRockRepository(LocalContext ctx, ILogger<CarvedRockRepository> logger,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory, IMemoryCache memoryCache)
         {
             _ctx = ctx;
             _logger = logger;
+            _memoryCache = memoryCache;
             _factoryLogger = loggerFactory.CreateLogger("DataAccessLayer");
         }
         public async Task<List<Product>> GetProductsAsync(string category)
@@ -35,8 +38,17 @@ namespace CarvedRock.Data
 
             try
             {
-                return await _ctx.Products.Where(p => p.Category == category || category == "all")
-                    .Include(p => p.Rating).ToListAsync();
+                var cacheKey = $"products_{category}";
+                if(!_memoryCache.TryGetValue(cacheKey,out List<Product> results))
+                {
+                    Thread.Sleep(5000);//Simulates heavy query
+                    results = await _ctx.Products.Where(p => p.Category == category || category == "all")
+                                .Include(p => p.Rating).ToListAsync();
+
+                    _memoryCache.Set(cacheKey, results, TimeSpan.FromMinutes(2));
+                }
+
+                return results;
             } 
             catch (Exception ex)
             {

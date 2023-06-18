@@ -50,6 +50,14 @@ builder.Services.AddAuthentication("Bearer")
         };
     });
 
+//In-memory caching
+//1. Easy to consume resources on server.
+//2. Cache Invalidation is hard (not distributed).
+
+
+//Built in
+builder.Services.AddMemoryCache();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
