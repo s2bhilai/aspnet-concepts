@@ -1,7 +1,10 @@
 ﻿using System.Diagnostics;
+using System.Text;
+using System.Text.Json;
 using CarvedRock.Data.Entities;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
@@ -13,14 +16,16 @@ namespace CarvedRock.Data
         private readonly ILogger<CarvedRockRepository> _logger;
         private readonly IMemoryCache _memoryCache;
         private readonly ILogger _factoryLogger;
+        private readonly IDistributedCache _distributedCache;
 
         public CarvedRockRepository(LocalContext ctx, ILogger<CarvedRockRepository> logger,
-            ILoggerFactory loggerFactory, IMemoryCache memoryCache)
+            ILoggerFactory loggerFactory, IMemoryCache memoryCache, IDistributedCache distributedCache)
         {
             _ctx = ctx;
             _logger = logger;
             _memoryCache = memoryCache;
             _factoryLogger = loggerFactory.CreateLogger("DataAccessLayer");
+            _distributedCache = distributedCache;
         }
         public async Task<List<Product>> GetProductsAsync(string category)
         {            
@@ -39,16 +44,42 @@ namespace CarvedRock.Data
             try
             {
                 var cacheKey = $"products_{category}";
-                if(!_memoryCache.TryGetValue(cacheKey,out List<Product> results))
+                
+                //In-Memory Caching
+                //if(!_memoryCache.TryGetValue(cacheKey,out List<Product> results))
+                //{
+                //    Thread.Sleep(5000);//Simulates heavy query
+                //    results = await _ctx.Products.Where(p => p.Category == category || category == "all")
+                //                .Include(p => p.Rating).ToListAsync();
+
+                //    _memoryCache.Set(cacheKey, results, TimeSpan.FromMinutes(2));
+                //}
+
+                //Distributed caching
+                var distResults = await _distributedCache.GetAsync(cacheKey);
+                if(distResults == null)
                 {
                     Thread.Sleep(5000);//Simulates heavy query
-                    results = await _ctx.Products.Where(p => p.Category == category || category == "all")
-                                .Include(p => p.Rating).ToListAsync();
+                    var productsToSerialize = await _ctx.Products
+                        .Where(p => p.Category == category || category == "all")
+                        .Include(p => p.Rating).ToListAsync();
 
-                    _memoryCache.Set(cacheKey, results, TimeSpan.FromMinutes(2));
+                    var serialized = JsonSerializer.Serialize(productsToSerialize,
+                        CacheSourceGenerationContext.Default.ListProduct);
+
+                    await _distributedCache.SetAsync(cacheKey, Encoding.UTF8.GetBytes(serialized),
+                        new DistributedCacheEntryOptions
+                        {
+                            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
+                        });
+
+                    return productsToSerialize;
                 }
 
-                return results;
+                var results = JsonSerializer.Deserialize(Encoding.UTF8.GetString(distResults),
+                    CacheSourceGenerationContext.Default.ListProduct);
+
+                return results ?? new List<Product>();
             } 
             catch (Exception ex)
             {
