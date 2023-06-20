@@ -115,5 +115,19 @@ namespace CarvedRock.Data
 
             return product;
         }       
+
+        public async Task<Product> AddNewProductAsync(Product product, bool invalidateCache)
+        {
+            _ctx.Products.Add(product);
+            await _ctx.SaveChangesAsync();
+
+            if(invalidateCache)
+            {
+                var cacheKey = $"products_{product.Category}";
+                await _distributedCache.RemoveAsync(cacheKey);
+            }
+
+            return product;
+        }
     }
 }

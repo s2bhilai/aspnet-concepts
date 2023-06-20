@@ -43,4 +43,22 @@ public partial class ProductController : ControllerBase
         _logger.LogWarning("No product found for ID: {id}", id);
         return NotFound();
     }
+
+    [HttpPost]
+    public async Task<IActionResult> Post()
+    {
+        var newProductModel = new ProductModel
+        {
+            Category = "boots",
+            Description = "These boots feel like flying",
+            ImgUrl = "",
+            Name = "New Boot",
+            Price = 99.99
+        };
+
+        var addedProduct = await _productLogic.AddNewProductAsync(newProductModel, true);
+
+        return Created($"{Request.Path}/{addedProduct.Id}", addedProduct);
+
+    }
 }
