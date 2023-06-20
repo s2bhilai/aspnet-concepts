@@ -57,6 +57,7 @@ builder.Services.AddAuthentication("Bearer")
 
 //Built in
 builder.Services.AddMemoryCache();
+builder.Services.AddResponseCaching();
 
 builder.Services.AddStackExchangeRedisCache(options =>
 {
@@ -96,6 +97,8 @@ if (app.Environment.IsDevelopment())
         options.OAuthUsePkce();
     });
 }
+
+app.UseResponseCaching();
 app.MapFallback(() => Results.Redirect("/swagger"));
 app.UseAuthentication();
 app.UseMiddleware<UserScopeMiddleware>();
