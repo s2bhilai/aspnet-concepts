@@ -59,6 +59,26 @@ builder.Services.AddAuthentication("Bearer")
 builder.Services.AddMemoryCache();
 builder.Services.AddResponseCaching();
 
+
+
+//Response Cache
+//1. From the server side response, it will contain additional HTTP headers to cache the response data.
+//2. Browser can avoid another HTTP request and use the content from cache.
+//3. Must be HEAD or GET requests.
+//4. Cannot have an Authorization Header.
+//5. Not for server side UI apps - Razor Pages, MVC
+//6. Usecases - Anonymous API calls, Static HTTP assets.
+//7. cache-control: public,max-age=90
+//8. Tag helpers - <cache> and <distributed-cache> can be used in Razor syntax.
+
+//Output Caching - support in .NET7
+//1. Must be GET or HEAD requests.
+//2. Authenticated requests are not cached.
+//3. Uses Memory Cache By Default
+//   - Dont use IDistributedCache
+//   - Can create custom IOutputCacheStore
+// 4. Defaults can be overridden.
+// 5. Caching at server side, For each http request, response is taken from cache at server side
 builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = builder.Configuration.GetConnectionString("Redis");
