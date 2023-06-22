@@ -7,7 +7,7 @@ public interface IProductLogic
 {
     Task<IEnumerable<ProductModel>> GetProductsForCategoryAsync(string category);
     Task<ProductModel?> GetProductByIdAsync(int id);
-    IEnumerable<ProductModel> GetProductsForCategory(string category);
+    Task<IEnumerable<ProductModel>> GetProductListForCategoryAsync(string category);
     ProductModel? GetProductById(int id);
     Task<Product> AddNewProductAsync(ProductModel product, bool invalidateCache);
 }

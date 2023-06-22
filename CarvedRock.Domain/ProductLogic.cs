@@ -40,9 +40,9 @@ public class ProductLogic : IProductLogic
         return product != null ? ConvertToProductModel(product) : null;
     }
 
-    public IEnumerable<ProductModel> GetProductsForCategory(string category)
+    public async Task<IEnumerable<ProductModel>> GetProductListForCategoryAsync(string category)
     {
-        var products =  _repo.GetProducts(category);
+        var products = await _repo.GetProductListAsync(category);
 
         var results = new List<ProductModel>();
         foreach (var product in products)

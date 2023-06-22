@@ -126,3 +126,8 @@ app.UseAuthorization();
 app.MapControllers().RequireAuthorization();
 
 app.Run();
+
+
+//Notes
+//1. Asynchronous code enables more concurrency, not speed. 
+//2. Improving concurrency improves performance under load, not a single transaction.

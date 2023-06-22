@@ -94,9 +94,10 @@ namespace CarvedRock.Data
             return await _ctx.Products.FindAsync(id);
         }
 
-        public List<Product> GetProducts(string category)
+        public async Task<List<Product>> GetProductListAsync(string category)
         {
-            return _ctx.Products.Where(p => p.Category == category || category == "all").ToList();
+            Thread.Sleep(5000);
+            return await _ctx.Products.Where(p => p.Category == category || category == "all").ToListAsync();
         }
 
         public Product? GetProductById(int id)
