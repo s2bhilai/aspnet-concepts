@@ -16,13 +16,11 @@ public partial class ListingModel : PageModel
     private readonly ILogger<ListingModel> _logger;
     private readonly HttpContext? _httpCtx;
 
-    public ListingModel(HttpClient apiClient, ILogger<ListingModel> logger,
-        IHttpContextAccessor httpContextAccessor)
+    public ListingModel(HttpClient apiClient, ILogger<ListingModel> logger)
     {
         _logger = logger;
         _apiClient = apiClient;
         _apiClient.BaseAddress = new Uri("https://localhost:7213");
-        _httpCtx = httpContextAccessor.HttpContext;
     }
 
     public List<ProductModel>? Products { get; set; }
@@ -37,14 +35,11 @@ public partial class ListingModel : PageModel
             throw new Exception("failed");
         }
 
-        if (_httpCtx != null)
-        {
-            var accessToken = await _httpCtx.GetTokenAsync("access_token");
-            _apiClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", accessToken);
-            // for a better way to include and manage access tokens for API calls:
+        var accessToken = await HttpContext.GetTokenAsync("access_token");
+        _apiClient.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Bearer", accessToken);
+        //for a better way to include and manage access tokens for API calls:
             // https://identitymodel.readthedocs.io/en/latest/aspnetcore/web.html
-        }
 
         var response = await _apiClient.GetAsync($"Product?category={cat}");
         if (response.IsSuccessStatusCode)

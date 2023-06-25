@@ -131,3 +131,10 @@ app.Run();
 //Notes
 //1. Asynchronous code enables more concurrency, not speed. 
 //2. Improving concurrency improves performance under load, not a single transaction.
+
+//3. Improper use of HttpContext can result in hangs,app crashes, or data corruption.
+//4. HttpContext is not thread safe.
+//5. HttpContext available in Controllers and Page Models.
+//6. IHttpContextAccessor for other classes - Don't capture HttpContext.
+//7. HttpContext is the built in property on the base PageModel and Controller class of AspNet Core, so don't inject in these cases.
+//8. If a class is injecting IHttpContextAccessor dont assign the HttpContext property in a variable in class constructor. This may capture null or incorrect HttpContext.
