@@ -138,3 +138,4 @@ app.Run();
 //6. IHttpContextAccessor for other classes - Don't capture HttpContext.
 //7. HttpContext is the built in property on the base PageModel and Controller class of AspNet Core, so don't inject in these cases.
 //8. If a class is injecting IHttpContextAccessor dont assign the HttpContext property in a variable in class constructor. This may capture null or incorrect HttpContext.
+//9. For forms and body content use async methods or framework features.
