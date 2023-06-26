@@ -16,11 +16,11 @@ public partial class ListingModel : PageModel
     private readonly ILogger<ListingModel> _logger;
     private readonly HttpContext? _httpCtx;
 
-    public ListingModel(HttpClient apiClient, ILogger<ListingModel> logger)
+    public ListingModel(IHttpClientFactory factory, ILogger<ListingModel> logger)
     {
         _logger = logger;
-        _apiClient = apiClient;
-        _apiClient.BaseAddress = new Uri("https://localhost:7213");
+        _apiClient = factory.CreateClient("backend");
+        //_apiClient.BaseAddress = new Uri("https://localhost:7213");
     }
 
     public List<ProductModel>? Products { get; set; }
@@ -35,11 +35,12 @@ public partial class ListingModel : PageModel
             throw new Exception("failed");
         }
 
-        var accessToken = await HttpContext.GetTokenAsync("access_token");
-        _apiClient.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", accessToken);
+        //No need for this code as AddUserAccessTokenHttpClient automatically adds access token and refreshes it and also checks if its valid
+        //var accessToken = await HttpContext.GetTokenAsync("access_token");
+        //_apiClient.DefaultRequestHeaders.Authorization =
+        //    new AuthenticationHeaderValue("Bearer", accessToken);
         //for a better way to include and manage access tokens for API calls:
-            // https://identitymodel.readthedocs.io/en/latest/aspnetcore/web.html
+        // https://identitymodel.readthedocs.io/en/latest/aspnetcore/web.html
 
         var response = await _apiClient.GetAsync($"Product?category={cat}");
         if (response.IsSuccessStatusCode)

@@ -45,8 +45,14 @@ builder.Services.AddAuthentication(options =>
 });
 //builder.Services.AddHttpContextAccessor();
 
+builder.Services.AddOpenIdConnectAccessTokenManagement();
+
 builder.Services.AddRazorPages();
-builder.Services.AddHttpClient();
+//Using Named Client, so that common configuration can be grouped together
+builder.Services.AddHttpClient("backend", client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7213");
+});
 
 var app = builder.Build();
 
