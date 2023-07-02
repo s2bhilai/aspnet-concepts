@@ -49,7 +49,13 @@ builder.Services.AddOpenIdConnectAccessTokenManagement();
 
 builder.Services.AddRazorPages();
 //Using Named Client, so that common configuration can be grouped together
-builder.Services.AddHttpClient("backend", client =>
+//builder.Services.AddHttpClient("backend", client =>
+//{
+//    client.BaseAddress = new Uri("https://localhost:7213");
+//});
+
+// To auto Renew access Token
+builder.Services.AddUserAccessTokenHttpClient("backend", configureClient:  client =>
 {
     client.BaseAddress = new Uri("https://localhost:7213");
 });
