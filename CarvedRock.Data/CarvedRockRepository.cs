@@ -59,6 +59,9 @@ namespace CarvedRock.Data
                 var distResults = await _distributedCache.GetAsync(cacheKey);
                 if(distResults == null)
                 {
+                    var timer = new Stopwatch();
+                    timer.Start();
+
                     Thread.Sleep(5000);//Simulates heavy query
                     var productsToSerialize = await _ctx.Products
                         .Where(p => p.Category == category || category == "all")
@@ -72,6 +75,11 @@ namespace CarvedRock.Data
                         {
                             AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
                         });
+
+                    timer.Stop();
+
+                    _logger.LogInformation("Database and caching took {ElapsedMs} milliseconds",
+                        timer.ElapsedMilliseconds);
 
                     return productsToSerialize;
                 }

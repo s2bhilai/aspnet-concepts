@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarvedRock.WebApp", "Carved
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarvedRock.Core", "CarvedRock.Core\CarvedRock.Core.csproj", "{02A9C51C-C015-42EF-839C-DDC19DF2B0FE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarvedRock.Benchmarking", "CarvedRock.Benchmarking\CarvedRock.Benchmarking.csproj", "{1A6E02F3-AA0C-466D-8F05-31CEA23A321C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{02A9C51C-C015-42EF-839C-DDC19DF2B0FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02A9C51C-C015-42EF-839C-DDC19DF2B0FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02A9C51C-C015-42EF-839C-DDC19DF2B0FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A6E02F3-AA0C-466D-8F05-31CEA23A321C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A6E02F3-AA0C-466D-8F05-31CEA23A321C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A6E02F3-AA0C-466D-8F05-31CEA23A321C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A6E02F3-AA0C-466D-8F05-31CEA23A321C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

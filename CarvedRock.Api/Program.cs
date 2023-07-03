@@ -10,6 +10,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using Serilog;
 using Serilog.Enrichers.Span;
 using Serilog.Exceptions;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
@@ -17,9 +18,11 @@ builder.Logging.ClearProviders();
 builder.Host.UseSerilog((context, loggerConfig) => {
     loggerConfig
     .ReadFrom.Configuration(context.Configuration)
+    .Enrich.WithProperty("Application", Assembly.GetExecutingAssembly().GetName().Name ?? "API")
     .Enrich.WithExceptionDetails()
     .Enrich.FromLogContext()
     .Enrich.With<ActivityEnricher>()
+    .WriteTo.Seq("http://localhost:5341")
     .WriteTo.Console()
     .WriteTo.Debug();
 });
@@ -122,6 +125,7 @@ app.UseResponseCaching();
 app.MapFallback(() => Results.Redirect("/swagger"));
 app.UseAuthentication();
 app.UseMiddleware<UserScopeMiddleware>();
+app.UseSerilogRequestLogging();
 app.UseAuthorization();
 app.MapControllers().RequireAuthorization();
 
@@ -139,3 +143,21 @@ app.Run();
 //7. HttpContext is the built in property on the base PageModel and Controller class of AspNet Core, so don't inject in these cases.
 //8. If a class is injecting IHttpContextAccessor dont assign the HttpContext property in a variable in class constructor. This may capture null or incorrect HttpContext.
 //9. For forms and body content use async methods or framework features.
+
+//10. Performance Tools
+//11. Diagnostics: Measure your app, understand its performance. Find hot path.
+//12. Benchmarking: Compare 2 approaches to see which is better.
+//13. Load Testing: See how well your app performs under load conditions.
+// Diagnostics - Request logging, Chart performace times - alert when slow, dotnet-trace tool.
+
+// ILogger and StopWatch class can help.
+// openTelemetry helps with microservices.
+// Many other services - Application Insights, NewRelic, DataDog, Cloudwatch, Seq, Elastic Cloud.
+
+//dotnet-trace ps
+//dotnet-trace collect -p 32423 
+
+//Benchmarking - create methods for different approaches.
+//Run benchmarking - evaluate results - Release Build.
+//Use optimized release builds.
+//Match target processing environment (OS, CPU, language version etc).
