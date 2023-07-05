@@ -98,6 +98,12 @@ builder.Services.AddScoped<IProductLogic, ProductLogic>();
 builder.Services.AddDbContext<LocalContext>();
 builder.Services.AddScoped<ICarvedRockRepository, CarvedRockRepository>();
 
+
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+});
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -121,6 +127,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseResponseCompression();
 app.UseResponseCaching();
 app.MapFallback(() => Results.Redirect("/swagger"));
 app.UseAuthentication();
@@ -161,3 +168,40 @@ app.Run();
 //Run benchmarking - evaluate results - Release Build.
 //Use optimized release builds.
 //Match target processing environment (OS, CPU, language version etc).
+
+//Load Testing:
+// NBomber for .NET Apis
+// JMeter - heavy weight framework - UIs with cookie based auth.
+// Use release builds
+// Dont do this against production.
+// Distributed tests are possible.
+
+//HTTP/2
+// - Header compression
+// - Multiplex connections.
+// - Faster load times
+
+//HTTP/3
+// - Faster connection setup
+// - Better transition between networks
+
+//HTTP/2 by default with asp net core 2.2
+
+//Response Compression
+// Relies on Accept-Encoding HTTP Header - gzip,br are common ones.
+// Applicable to text based resources - html,css,js,json,xml
+// Avoid further compression of already-compressed content - png,jpg
+// Middleware available with in framework.
+
+// Web servers like IIS,nginx, apache can do response compression often better so no need to use
+// asp net core response compression, If application running not on these servers like kestrel use asp net core compression.
+
+//Minification and Bundling
+//Minification
+// shrink css and javascript 
+// Take only required parts
+// Eliminates whitespace and comments
+// Renames local vars
+//Bundling
+// Merging 2 or more files into one.
+// Reduces number of requests.
