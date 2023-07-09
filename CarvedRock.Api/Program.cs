@@ -244,3 +244,8 @@ app.Run();
 // Analysis often involves comparing "snapshots".
 // dotnet-cli tools available to capture data - dotnet-counters
 // Often perform analysis in conjuction with load test.
+
+//dotnet run -c Release > tmp.txt
+// dotnet-counters ps
+// dotnet-counters monitor -p 12452
+// dotnet-counters collect -p 12452 --format csv --refresh-interval 3
