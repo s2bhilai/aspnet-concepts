@@ -205,3 +205,42 @@ app.Run();
 //Bundling
 // Merging 2 or more files into one.
 // Reduces number of requests.
+
+// Memory management
+// - .NET is a managed framework.
+// - CLR manages memory and performs garbage collection.
+// - Garbage Collection (GC)
+// - Generations (0,1,2)
+// - Roots
+// - GC Modes
+// - Large Object heap
+
+// - Using too much memory slows performance.
+// - Growing (leaking) memory usage willl eventually kill or recycle your app.
+// Dependency Injection service lifetime
+// Singleton - they should not have property or fields that keep on growing as singletons runs the entire lifetime of application.
+// Scoped and transient items should free resources or used pooled ones.
+
+//Statics should not grow heavily.
+
+//Large Objects
+// - Read large files or responses into memory.
+// - Large arrays or lists.
+
+//Garbage Collection manages memory allocation and release
+// Gen 0 : Short lived objects, GC happens most often here
+// Gen 1 : Survived Gen 0 collection, GC here if Gen 0 didnt reclaim enough
+// Gen 2 : Singletons,statics, survived Gen 1 collection; GC here is slower.
+// Root : Something that keeps an object alive (will not be GC'd).
+
+//Collectively, 3 generations are called the Managed Heap, When application starts CLR will allocate  managed heap which will give our application virtual address space to work with. 
+//GC is a completely blocking operation ( but is fast ).
+
+//Roots prevent GC from freeing up memory.
+// App pool recycles, app restarts (kubernetes) often point to leaks or incorrect limits.
+
+//Analyzing memory usage
+// VS supports memory usage analysis.
+// Analysis often involves comparing "snapshots".
+// dotnet-cli tools available to capture data - dotnet-counters
+// Often perform analysis in conjuction with load test.
